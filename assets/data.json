@@ -37,16 +37,34 @@
       "description": "Pick the best golfer lineup for the Masters on FanDuel.",
       "date": "April 11 - April 14",
       "results": [
-        { "player": 10, "raw": 0, "points": 0 },
-        { "player": 8, "raw": 0, "points": 0 },
-        { "player": 3, "raw": 0, "points": 0 },
-        { "player": 5, "raw": 0, "points": 0 },
+        { "player": 9, "raw": 365, "points": 10 },
+        { "player": 2, "raw": 332.6, "points": 9 },
+        { "player": 4, "raw": 327.5, "points": 8 },
+        { "player": 5, "raw": 311.5, "points": 7 },
+        { "player": 6, "raw": 299.5, "points": 6 },
+        { "player": 7, "raw": 287.7, "points": 5 },
+        { "player": 1, "raw": 253.8, "points": 4 },
+        { "player": 3, "raw": 252.6, "points": 3 },
+        { "player": 8, "raw": 239.9, "points": 2 },
+        { "player": 10, "raw": 239.3, "points": 1 }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "NBA Playoffs",
+      "description": "Bracket pick'em of some kind.",
+      "date": "April 20 - June",
+      "results": [
         { "player": 9, "raw": 0, "points": 0 },
-        { "player": 4, "raw": 0, "points": 0 },
         { "player": 2, "raw": 0, "points": 0 },
+        { "player": 4, "raw": 0, "points": 0 },
+        { "player": 5, "raw": 0, "points": 0 },
+        { "player": 6, "raw": 0, "points": 0 },
         { "player": 7, "raw": 0, "points": 0 },
         { "player": 1, "raw": 0, "points": 0 },
-        { "player": 6, "raw": 0, "points": 0 }
+        { "player": 3, "raw": 0, "points": 0 },
+        { "player": 8, "raw": 0, "points": 0 },
+        { "player": 10, "raw": 0, "points": 0 }
       ]
     }
   ]
