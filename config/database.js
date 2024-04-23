@@ -11,7 +11,7 @@ const connectDB = async () => {
     return;
   }
 
-  console.log("Connecting to MongoDB URI:", process.env.MONGODB_URI);
+  console.log("Connecting to MongoDB...");
 
   // Connect to MongoDB
   try {
