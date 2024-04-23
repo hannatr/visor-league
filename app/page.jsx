@@ -1,5 +1,27 @@
 import React from "react";
-import data from "@/assets/data.json";
+
+const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
+
+// Fetch results from database
+async function fetchResults() {
+  try {
+    // Handle the case where the domain is not available yet
+    if (!apiDomain) {
+      return [];
+    }
+
+    const res = await fetch(`${apiDomain}/results`);
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
 
 const Leaderboard = ({ players, events }) => {
   // Aggregate Points
@@ -122,17 +144,33 @@ const EventResults = ({ event, players }) => {
   );
 };
 
-const HomePage = () => {
-  return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="mx-auto max-w-7xl px-2 py-6 sm:px-6 lg:px-8">
-        <Leaderboard players={data.players} events={data.events} />
-        {data.events.map((event) => (
-          <EventResults key={event.id} event={event} players={data.players} />
-        ))}
+const HomePage = async () => {
+  let content;
+  const data = await fetchResults();
+
+  if (data.length === 0) {
+    content = <div>No results available.</div>;
+  } else {
+    const currentSeason = data[0];
+    content = (
+      <div className="bg-gray-100 min-h-screen">
+        <div className="mx-auto max-w-7xl px-2 py-6 sm:px-6 lg:px-8">
+          <Leaderboard
+            players={currentSeason.players}
+            events={currentSeason.events}
+          />
+          {currentSeason.events.map((event) => (
+            <EventResults
+              key={event.id}
+              event={event}
+              players={currentSeason.players}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+  return content;
 };
 
 export default HomePage;
