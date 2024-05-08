@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { fetchResults, fetchPlayers } from "@/utils/requests";
 import Leaderboard from "@/components/Leaderboard";
 import EventResults from "@/components/EventResults";
 
-const HomePage = () => {
+const SeasonHistoryPage = () => {
+  const { season } = useParams();
   const [results, setResults] = useState(null);
   const [players, setPlayers] = useState(null);
   // TODO actually use the loading state
@@ -15,7 +17,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resultsData = await fetchResults({ current: true });
+        const resultsData = await fetchResults({ season: `${season}` });
         setResults(resultsData);
       } catch (error) {
         console.error("Error fetching results:", error);
@@ -55,7 +57,7 @@ const HomePage = () => {
           <Leaderboard
             players={players}
             results={[results]}
-            title={`Pick'em Leaderboard ${results.season}`}
+            title={`Pick'em Leaderboard ${season}`}
           />
           {results.events.map((event) => (
             <EventResults key={event.id} event={event} players={players} />
@@ -67,4 +69,4 @@ const HomePage = () => {
   return content;
 };
 
-export default HomePage;
+export default SeasonHistoryPage;
