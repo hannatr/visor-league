@@ -1,4 +1,5 @@
 import React from "react";
+import { Analytics } from "@vercel/analytics/react";
 import "@/assets/styles/globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
@@ -14,6 +15,7 @@ const MainLayout = ({ children }) => {
         <NavBar />
         <main>{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

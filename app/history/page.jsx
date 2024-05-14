@@ -1,15 +1,15 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchResults, fetchPlayers } from "@/utils/requests";
+import Loading from "@/components/Loading";
 import Leaderboard from "@/components/Leaderboard";
 
 const HistoryPage = () => {
   const [results, setResults] = useState(null);
   const [players, setPlayers] = useState(null);
-  // TODO actually use the loading state
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   let content;
 
   useEffect(() => {
@@ -19,8 +19,7 @@ const HistoryPage = () => {
         setResults(resultsData);
       } catch (error) {
         console.error("Error fetching results:", error);
-      } finally {
-        setLoading(false);
+        setError("Error fetching results");
       }
     };
 
@@ -36,8 +35,7 @@ const HistoryPage = () => {
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
-      } finally {
-        setLoading(false);
+        setError("Error fetching players");
       }
     };
 
@@ -46,15 +44,25 @@ const HistoryPage = () => {
     }
   }, [players]);
 
-  if (results === null || players === null) {
-    content = <div>No results available.</div>;
+  useEffect(() => {
+    if (results === null || players === null) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [results, players]);
+
+  if (error) {
+    content = <div className="text-red-500 text-center mt-4">{error}</div>;
+  } else if (loading) {
+    content = <Loading loading={loading} />;
   } else {
     content = (
       <div className="bg-gray-100 min-h-screen">
         <div className="mx-auto max-w-7xl px-2 py-6 sm:px-6 lg:px-8">
           <Leaderboard
             players={players}
-            results={results}
+            results={Array.isArray(results) ? results : [results]}
             title="History Leaderboard"
           />
           <div className="flex justify-center py-6">
@@ -63,20 +71,21 @@ const HistoryPage = () => {
                 Past Seasons
               </h2>
               <div className="mb-6 flex flex-col items-center">
-                {results.map((event) => {
-                  if (!event.current) {
-                    return (
-                      <Link
-                        className="text-green-700 font-bold text-lg hover:text-green-800"
-                        key={event.season}
-                        href={`/history/${event.season}`}
-                      >
-                        {event.season}
-                      </Link>
-                    );
-                  }
-                  return null;
-                })}
+                {Array.isArray(results) &&
+                  results.map((event) => {
+                    if (!event.current) {
+                      return (
+                        <Link
+                          className="text-green-700 font-bold text-lg hover:text-green-800"
+                          key={event.season}
+                          href={`/history/${event.season}`}
+                        >
+                          {event.season}
+                        </Link>
+                      );
+                    }
+                    return null;
+                  })}
               </div>
             </div>
           </div>
@@ -84,6 +93,7 @@ const HistoryPage = () => {
       </div>
     );
   }
+
   return content;
 };
 

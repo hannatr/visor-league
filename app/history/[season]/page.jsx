@@ -5,13 +5,14 @@ import { useParams } from "next/navigation";
 import { fetchResults, fetchPlayers } from "@/utils/requests";
 import Leaderboard from "@/components/Leaderboard";
 import EventResults from "@/components/EventResults";
+import Loading from "@/components/Loading";
 
 const SeasonHistoryPage = () => {
   const { season } = useParams();
   const [results, setResults] = useState(null);
   const [players, setPlayers] = useState(null);
-  // TODO actually use the loading state
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   let content;
 
   useEffect(() => {
@@ -21,8 +22,7 @@ const SeasonHistoryPage = () => {
         setResults(resultsData);
       } catch (error) {
         console.error("Error fetching results:", error);
-      } finally {
-        setLoading(false);
+        setError("Error fetching results");
       }
     };
 
@@ -38,8 +38,7 @@ const SeasonHistoryPage = () => {
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
-      } finally {
-        setLoading(false);
+        setError("Error fetching players");
       }
     };
 
@@ -48,8 +47,18 @@ const SeasonHistoryPage = () => {
     }
   }, [players]);
 
-  if (results === null || players === null) {
-    content = <div>No results available.</div>;
+  useEffect(() => {
+    if (results === null || players === null) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [results, players]);
+
+  if (error) {
+    content = <div className="text-red-500 text-center mt-4">{error}</div>;
+  } else if (loading) {
+    content = <Loading loading={loading} />;
   } else {
     content = (
       <div className="bg-gray-100 min-h-screen">
