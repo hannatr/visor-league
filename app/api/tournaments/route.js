@@ -1,6 +1,11 @@
 import connectDB from "@/config/database";
 import Tournament from "@/models/Tournament";
 
+// Turn off caching
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 // GET /api/tournaments
 export const GET = async () => {
   try {

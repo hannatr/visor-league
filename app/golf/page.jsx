@@ -14,6 +14,7 @@ const GolfPage = () => {
   const fetchTournamentData = async () => {
     try {
       const tournamentData = await fetchTournaments({ current: true });
+      console.log(tournament.scorecards);
       setTournament(tournamentData);
     } catch (error) {
       console.error("Error fetching tournament:", error);

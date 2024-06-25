@@ -8,9 +8,6 @@ export const metadata = {
   title: "Visor League",
 };
 
-// Prevent Vercel Data Cache on all fetch requests
-export const fetchCache = "force-no-store";
-
 const MainLayout = ({ children }) => {
   return (
     <html lang="en">
