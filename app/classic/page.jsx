@@ -77,23 +77,31 @@ const GolfPage = () => {
           </div>
           <div className="flex justify-center">
             <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold text-center mt-8 mb-2">
-                Past Champions
-              </h2>
-              <p className="text-center text-gray-600 mb-2">
-                Visor Classic, September 12, 2020, Twin Ponds: Team Miers (-5)
-              </p>
-              <p className="text-center text-gray-600 mb-2">
-                Visor Classic II, September 18, 2021, Twin Ponds: Team Castle
-                (-6)
-              </p>
-              <p className="text-center text-gray-600 mb-2">
-                Visor Classic III, August 27, 2022, Twin Ponds: Team Ball, Team
-                Arline, Team Miers (-7)
-              </p>
-              <p className="text-center text-gray-600 mb-8">
-                Visor Classic IV, August 26, 2023, Valley View: Team Miers (-8)
-              </p>
+              <div className="p-4">
+                <h2 className="text-xl font-bold">Past Champions</h2>
+                <p className="text-sm justify-left text-gray-600 italic mb-2">
+                  The Visor Classic is a long-running, historic tournament among
+                  mediocre golfers. In its founding year in 2020, tournament
+                  organizer Christopher Ball had the bright vision of a golf
+                  tournament among friends and decided a visor was the best way
+                  to shade it.
+                </p>
+                <p className="mb-2">
+                  Visor Classic, September 12, 2020, Twin Ponds: Team Miers (-5)
+                </p>
+                <p className="mb-2">
+                  Visor Classic II, September 18, 2021, Twin Ponds: Team Castle
+                  (-6)
+                </p>
+                <p className="mb-2">
+                  Visor Classic III, August 27, 2022, Twin Ponds: Team Ball,
+                  Team Arline, Team Miers (-7)
+                </p>
+                <p className="">
+                  Visor Classic IV, August 26, 2023, Valley View: Team Miers
+                  (-8)
+                </p>
+              </div>
             </div>
           </div>
           <div className="flex justify-center mt-4">

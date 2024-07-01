@@ -79,6 +79,14 @@ const Navbar = () => {
                 >
                   History
                 </Link>
+                <Link
+                  href="/classic"
+                  className={`${
+                    pathname === "/classic" ? "bg-black" : ""
+                  } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                >
+                  Classic
+                </Link>
               </div>
             </div>
           </div>
@@ -111,6 +119,14 @@ const Navbar = () => {
               } text-white block rounded-md px-3 py-2 text-base font-medium`}
             >
               History
+            </Link>
+            <Link
+              href="/classic"
+              className={`${
+                pathname === "/classic" ? "bg-black" : ""
+              } text-white block rounded-md px-3 py-2 text-base font-medium`}
+            >
+              Classic
             </Link>
           </div>
         </div>
