@@ -21,6 +21,8 @@ const ScorecardSchema = new Schema({
 
 const TournamentSchema = new Schema({
   year: { type: Number, required: true },
+  title: { type: String, required: true },
+  date: { type: String, required: true },
   current: { type: Boolean, required: true },
   course: { type: String, required: true },
   holes: [HoleSchema],

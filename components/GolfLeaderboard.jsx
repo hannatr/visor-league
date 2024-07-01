@@ -39,11 +39,13 @@ const GolfLeaderboard = ({ tournament, players }) => {
   return (
     <div className="flex justify-center">
       <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mt-8 mb-4">
-          Visor Classic {tournament.year}
+        <h2 className="text-2xl font-bold text-center mt-8">
+          {tournament.title}
         </h2>
+        <p className="text-sm text-center text-gray-600">{tournament.date}</p>
+        <p className="text-sm text-center text-gray-600">{tournament.course}</p>
         <div className="overflow-x-auto md:overflow-hidden">
-          <table className="min-w-full mb-6">
+          <table className="min-w-full mb-6 mt-4">
             <thead className="bg-green-700 text-white">
               <tr>
                 <th className="px-6 py-1 text-left text-xs font-medium uppercase tracking-wider">
