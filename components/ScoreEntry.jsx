@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 const ScoreEntry = ({ show, onClose, hole, score, onSave }) => {
-  //  TODO fix the state after a save
   const [holeScore, setHoleScore] = useState(score);
 
   useEffect(() => {

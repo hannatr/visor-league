@@ -31,7 +31,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchPlayerData = async () => {
       try {
-        const playersData = await fetchPlayers();
+        const playersData = await fetchPlayers(true);
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);

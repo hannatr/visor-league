@@ -35,7 +35,11 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
 
   const handleHoleClick = (hole, score) => {
     setSelectedHole(hole);
-    setSelectedScore(score);
+    if (score === 0) {
+      setSelectedScore(hole.par);
+    } else {
+      setSelectedScore(score);
+    }
     setShowModal(true);
   };
 
@@ -140,6 +144,13 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
           </tbody>
         </table>
       </div>
+      <ScoreEntry
+        show={showModal}
+        hole={selectedHole}
+        score={selectedScore}
+        onSave={handleSaveScore}
+        onClose={() => setShowModal(false)}
+      />
       <style jsx>{`
         .circle {
           display: inline-block;
@@ -159,13 +170,6 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
           border: 1px solid black;
         }
       `}</style>
-      <ScoreEntry
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        hole={selectedHole}
-        score={selectedScore}
-        onSave={handleSaveScore}
-      />
     </div>
   );
 };

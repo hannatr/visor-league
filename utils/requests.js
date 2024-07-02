@@ -29,7 +29,7 @@ async function fetchResults({ current = false, season = "" } = {}) {
 }
 
 // Fetch all players
-async function fetchPlayers() {
+async function fetchPlayers(leagueOnly = false) {
   try {
     // Handle the case where the domain is not available yet
     if (!apiDomain) {
@@ -42,7 +42,15 @@ async function fetchPlayers() {
       throw new Error("Failed to fetch players");
     }
 
-    return res.json();
+    const players = await res.json();
+
+    if (leagueOnly) {
+      return players.filter(
+        (player) => player.player_id >= 1 && player.player_id <= 10
+      );
+    }
+
+    return players;
   } catch (error) {
     console.log(error);
     return [];
