@@ -87,22 +87,20 @@ async function fetchTournaments({ current = false, season = "" } = {}) {
 
 async function updateScore({ scorecard_id, holeNumber, score }) {
   try {
-    // TODO remove?
-    // Handle the case where the domain is not available yet
-    if (!apiDomain) {
-      return [];
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token"); // Retrieve the token from the URL
 
     let url = `${apiDomain}/tournaments`;
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": token, // Include the token in the request headers
       },
       body: JSON.stringify({ scorecard_id, holeNumber, score }),
     });
     if (!res.ok) {
-      throw new Error("Failed to update score");
+      throw new Error(`Failed to update score: ${res.statusText}`);
     }
     return res.json();
   } catch (error) {

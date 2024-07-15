@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import ScoreEntry from "./ScoreEntry";
 import { updateScore } from "@/utils/requests";
 
@@ -6,6 +7,8 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
   const [selectedHole, setSelectedHole] = useState(null);
   const [selectedScore, setSelectedScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
   // Get player names from player IDs
   const getPlayerNames = (playerIds) => {
@@ -34,6 +37,7 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
   const totalPar = calculateTotalPar(holes);
 
   const handleHoleClick = (hole, score) => {
+    if (!token) return;
     setSelectedHole(hole);
     if (score === 0) {
       setSelectedScore(hole.par);
@@ -52,7 +56,7 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
       });
       onUpdate(); // Refresh the data
       setSelectedHole(null);
-      setSelectedHole(0);
+      setSelectedScore(0);
     } catch (error) {
       console.error("Error updating score:", error);
     }
@@ -126,7 +130,9 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
                 return (
                   <td
                     key={index}
-                    className="px-2 py-1 text-xs font-medium text-center border border-green-700 cursor-pointer"
+                    className={`px-2 py-1 text-xs font-medium text-center border border-green-700 ${
+                      token ? "cursor-pointer" : ""
+                    }`}
                     onClick={() => handleHoleClick(hole, score.score)}
                   >
                     <span

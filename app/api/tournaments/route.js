@@ -25,6 +25,13 @@ export const GET = async () => {
 // POST /api/tournaments
 export const POST = async (req) => {
   try {
+    const token = req.headers.get("x-access-token");
+    if (token !== process.env.SCORE_TOKEN) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+      });
+    }
+
     await connectDB();
 
     const { scorecard_id, holeNumber, score } = await req.json();
