@@ -1,6 +1,11 @@
 import connectDB from "@/config/database";
 import Player from "@/models/Player";
 
+// Turn off caching
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 // GET /api/players
 export const GET = async () => {
   try {

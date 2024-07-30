@@ -14,6 +14,7 @@ const ScoreSchema = new Schema({
 const ScorecardSchema = new Schema({
   scorecard_id: { type: Number, required: true },
   team: { type: String, required: true },
+  tee_time: { type: String, required: true },
   // TODO reference the player collection
   playerIds: [{ type: Number, required: true }],
   scores: [ScoreSchema],

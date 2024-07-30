@@ -1,6 +1,11 @@
 import connectDB from "@/config/database";
 import Result from "@/models/Result";
 
+// Turn off caching
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 // GET /api/results/current
 export const GET = async () => {
   try {
