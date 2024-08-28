@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { FaTrophy, FaMedal, FaThumbsDown } from "react-icons/fa";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";

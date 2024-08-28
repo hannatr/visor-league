@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+"use client";
+import React, { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import ScoreEntry from "./ScoreEntry";
 import { updateScore } from "@/utils/requests";
 
-const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
+const Scorecard = ({ scorecard, players, holes }) => {
   const [selectedHole, setSelectedHole] = useState(null);
   const [selectedScore, setSelectedScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const token = searchParams.get("token");
 
   // Get player names from player IDs
@@ -54,9 +56,8 @@ const Scorecard = ({ scorecard, players, holes, onUpdate }) => {
         holeNumber: selectedHole.holeNumber,
         score: newScore,
       });
-      onUpdate(); // Refresh the data
-      setSelectedHole(null);
-      setSelectedScore(0);
+      // Refresh the page to get the updated tournament data
+      router.refresh();
     } catch (error) {
       console.error("Error updating score:", error);
     }
