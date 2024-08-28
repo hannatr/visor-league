@@ -1,11 +1,11 @@
 import React from "react";
 import Leaderboard from "@/components/Leaderboard";
 import EventResults from "@/components/EventResults";
-import connectDB from "@/config/database";
 import { fetchResults, fetchPlayers } from "@/utils/requests";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
-  await connectDB();
   const results = await fetchResults({ current: true });
   const players = await fetchPlayers(true);
 
@@ -18,10 +18,10 @@ export default async function HomePage() {
           <>
             <Leaderboard
               players={players}
-              results={[results]}
+              results={results}
               title="Pick'em Leaderboard"
             />
-            {results.events.map((event) => (
+            {results[0].events.map((event) => (
               <EventResults key={event.id} event={event} players={players} />
             ))}
           </>

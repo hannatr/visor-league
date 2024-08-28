@@ -52,6 +52,7 @@ const Scorecard = ({ scorecard, players, holes }) => {
   const handleSaveScore = async (newScore) => {
     try {
       await updateScore({
+        token: token,
         scorecard_id: scorecard.scorecard_id,
         holeNumber: selectedHole.holeNumber,
         score: newScore,

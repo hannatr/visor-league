@@ -2,10 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { fetchResults, fetchPlayers } from "@/utils/requests";
 import Leaderboard from "@/components/Leaderboard";
-import connectDB from "@/config/database";
+
+export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
-  await connectDB();
   const results = await fetchResults();
   const players = await fetchPlayers(true);
 
@@ -18,7 +18,7 @@ export default async function HistoryPage() {
           <>
             <Leaderboard
               players={players}
-              results={Array.isArray(results) ? results : [results]}
+              results={results}
               title="History Leaderboard"
             />
             <div className="flex justify-center py-6">
@@ -27,21 +27,20 @@ export default async function HistoryPage() {
                   Past Seasons
                 </h2>
                 <div className="mb-6 flex flex-col items-center">
-                  {Array.isArray(results) &&
-                    results.map((event) => {
-                      if (!event.current) {
-                        return (
-                          <Link
-                            className="text-green-700 font-bold text-lg hover:text-green-800"
-                            key={event.season}
-                            href={`/history/${event.season}`}
-                          >
-                            {event.season}
-                          </Link>
-                        );
-                      }
-                      return null;
-                    })}
+                  {results.map((event) => {
+                    if (!event.current) {
+                      return (
+                        <Link
+                          className="text-green-700 font-bold text-lg hover:text-green-800"
+                          key={event.season}
+                          href={`/history/${event.season}`}
+                        >
+                          {event.season}
+                        </Link>
+                      );
+                    }
+                    return null;
+                  })}
                 </div>
               </div>
             </div>

@@ -2,12 +2,12 @@ import React from "react";
 import { fetchTournaments, fetchPlayers } from "@/utils/requests";
 import GolfLeaderboard from "@/components/GolfLeaderboard";
 import Scorecard from "@/components/Scorecard";
-import connectDB from "@/config/database";
+
+export const dynamic = "force-dynamic";
 
 export default async function GolfPage() {
-  await connectDB();
   const players = await fetchPlayers();
-  const tournament = await fetchTournaments({ current: true });
+  const tournament = (await fetchTournaments({ current: true }))[0];
 
   return (
     <div className="bg-gray-100 min-h-screen">

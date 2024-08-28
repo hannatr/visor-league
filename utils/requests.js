@@ -1,111 +1,118 @@
-const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
+"use server";
+import connectDB from "@/config/database";
+import Result from "@/models/Result";
+import Player from "@/models/Player";
+import Tournament from "@/models/Tournament";
 
-// Fetch all results
+const convertIdToString = (obj) => {
+  if (Array.isArray(obj)) {
+    return obj.map(convertIdToString);
+  } else if (
+    obj !== null &&
+    typeof obj === "object" &&
+    obj.hasOwnProperty("_id")
+  ) {
+    obj._id = obj._id.toString();
+  }
+  return obj;
+};
+
 async function fetchResults({ current = false, season = "" } = {}) {
   try {
-    // Handle the case where the domain is not available yet
-    if (!apiDomain) {
+    await connectDB();
+
+    const query = {};
+    if (current) query.current = true;
+    if (season) query.season = season;
+
+    const results = await Result.find(query).lean();
+
+    if (!results || results.length === 0) {
       return [];
     }
 
-    let url = `${apiDomain}/results`;
-    if (current) {
-      url += "/current";
-    } else if (season !== "") {
-      url += `/season/${season}`;
-    }
-
-    const res = await fetch(url, { cache: "no-store" });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch results");
-    }
-
-    return res.json();
+    return convertIdToString(results);
   } catch (error) {
     console.log(error);
     return [];
   }
 }
 
-// Fetch all players
 async function fetchPlayers(leagueOnly = false) {
   try {
-    // Handle the case where the domain is not available yet
-    if (!apiDomain) {
-      return [];
-    }
+    await connectDB();
 
-    const res = await fetch(`${apiDomain}/players`, { cache: "no-store" });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch players");
-    }
-
-    const players = await res.json();
+    let players = await Player.find({}).lean();
 
     if (leagueOnly) {
-      return players.filter(
+      players = players.filter(
         (player) => player.player_id >= 1 && player.player_id <= 10
       );
     }
 
-    return players;
+    return convertIdToString(players);
   } catch (error) {
     console.log(error);
     return [];
   }
 }
 
-// Fetch all tournaments
 async function fetchTournaments({ current = false, season = "" } = {}) {
   try {
-    // Handle the case where the domain is not available yet
-    if (!apiDomain) {
-      return [];
-    }
+    await connectDB();
 
-    let url = `${apiDomain}/tournaments`;
+    const query = {};
     if (current) {
-      url += "/current";
-    } else if (season !== "") {
-      url += `/season/${season}`;
+      query.current = true;
+    }
+    if (season) {
+      query.season = season;
     }
 
-    const res = await fetch(url, { cache: "no-store" });
+    const tournaments = await Tournament.find(query).lean();
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch tournaments");
-    }
-
-    return res.json();
+    return convertIdToString(tournaments);
   } catch (error) {
     console.log(error);
     return [];
   }
 }
 
-async function updateScore({ scorecard_id, holeNumber, score }) {
+async function updateScore({ token, scorecard_id, holeNumber, score }) {
   try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token"); // Retrieve the token from the URL
-
-    let url = `${apiDomain}/tournaments`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": token, // Include the token in the request headers
-      },
-      body: JSON.stringify({ scorecard_id, holeNumber, score }),
-    });
-    if (!res.ok) {
-      throw new Error(`Failed to update score: ${res.statusText}`);
+    if (token !== process.env.SCORE_TOKEN) {
+      return { status: 403, error: "Forbidden" };
     }
-    return res.json();
+
+    await connectDB();
+
+    const tournament = await Tournament.findOne({ current: true });
+    if (!tournament) {
+      return { status: 404, error: "Tournament not found" };
+    }
+
+    const scorecard = tournament.scorecards.find((scorecard) => {
+      return scorecard.scorecard_id === scorecard_id;
+    });
+
+    if (!scorecard) {
+      return { status: 404, error: "Scorecard not found" };
+    }
+
+    const holeScore = scorecard.scores.find(
+      (hole) => hole.holeNumber === holeNumber
+    );
+    if (holeScore) {
+      holeScore.score = score;
+    } else {
+      scorecard.scores.push({ holeNumber, score });
+    }
+
+    await tournament.save();
+    return { status: 200, error: "Scorecard updated" };
   } catch (error) {
-    console.log(error);
-    return [];
+    console.log("Error updating score:", error);
+    return { status: 500, error: "Error updating score" };
   }
 }
 
