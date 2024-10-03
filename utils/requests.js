@@ -3,6 +3,7 @@ import connectDB from "@/config/database";
 import Result from "@/models/Result";
 import Player from "@/models/Player";
 import Tournament from "@/models/Tournament";
+import DFSResult from "@/models/DFSResult";
 
 const convertIdToString = (obj) => {
   if (Array.isArray(obj)) {
@@ -78,6 +79,18 @@ async function fetchTournaments({ current = false, season = "" } = {}) {
   }
 }
 
+async function fetchDFSResults({ query = {} } = {}) {
+  try {
+    await connectDB();
+    const results = await DFSResult.find(query).lean();
+
+    return convertIdToString(results);
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 async function updateScore({ token, scorecard_id, holeNumber, score }) {
   try {
     if (token !== process.env.SCORE_TOKEN) {
@@ -116,4 +129,10 @@ async function updateScore({ token, scorecard_id, holeNumber, score }) {
   }
 }
 
-export { fetchResults, fetchPlayers, fetchTournaments, updateScore };
+export {
+  fetchResults,
+  fetchPlayers,
+  fetchTournaments,
+  fetchDFSResults,
+  updateScore,
+};
