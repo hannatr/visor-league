@@ -1,12 +1,11 @@
 import React from "react";
 import FDLeaderboard from "@/components/FDLeaderboard";
-import { fetchDFSResults, fetchPlayers } from "@/utils/requests";
+import { fetchDFSResults } from "@/utils/requests";
 
 export const dynamic = "force-dynamic";
 
 export default async function DFSPage() {
   const results = await fetchDFSResults();
-  const players = await fetchPlayers(true);
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -14,11 +13,7 @@ export default async function DFSPage() {
         {results.length === 0 ? (
           <p>No Results</p>
         ) : (
-          <FDLeaderboard
-            players={players}
-            results={results}
-            title="DFS League Leaderboard"
-          />
+          <FDLeaderboard results={results} title="DFS League Leaderboard" />
         )}
       </div>
     </div>

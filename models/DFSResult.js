@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 const { Schema, model, models } = mongoose;
 
-const DFSPlayerSchema = new Schema({
-  name: { type: String, required: true },
-  scores: [Number], // Array of numbers
-});
+const DFSPlayerSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    scores: [Number], // Array of numbers
+  },
+  { _id: false }
+);
 
 const DFSResultSchema = new Schema({
   season: { type: Number, required: true },
