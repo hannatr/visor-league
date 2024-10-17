@@ -74,7 +74,13 @@ const DFSAdminForm = ({ results }) => {
     const updatedLeague = preprocessScores(scores);
     if (!updatedLeague) return; // Stop submission if there's an error
 
-    await updateDFSLeague({ league: updatedLeague });
+    const response = await updateDFSLeague({ league: updatedLeague });
+
+    if (response.status === 200) {
+      window.alert("DFS League updated successfully!");
+    } else {
+      window.alert(`Error: ${response.error}`);
+    }
   };
 
   return (

@@ -1,13 +1,14 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FaTrophy, FaMedal, FaThumbsDown, FaGem } from "react-icons/fa";
+import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 
 const FDLeaderboard = ({ results, title }) => {
   const league = results[0];
   const weeks = Object.keys(league.players[0].scores).length;
 
   // Transform the player data to include name, weekly scores, and total score
-  const sortedPlayers = league.players
+  const players = league.players
     .map((player) => {
       const transformed = { name: player.name, total: 0 };
 
@@ -21,26 +22,59 @@ const FDLeaderboard = ({ results, title }) => {
     .sort((a, b) => b.total - a.total); // Sort players by total in descending order
 
   // Add rank to each player
-  sortedPlayers.forEach((player, index) => {
+  players.forEach((player, index) => {
     player.rank = index + 1;
   });
 
   // Calculate the highest/lowest scores for each week
   const highestScores = Array.from({ length: weeks }).map((_, weekIndex) => {
     return Math.max(
-      ...sortedPlayers.map((player) => player[`week ${weekIndex + 1}`])
+      ...players.map((player) => player[`week ${weekIndex + 1}`])
     );
   });
   const lowestScores = Array.from({ length: weeks }).map((_, weekIndex) => {
     return Math.min(
-      ...sortedPlayers.map((player) => player[`week ${weekIndex + 1}`])
+      ...players.map((player) => player[`week ${weekIndex + 1}`])
     );
   });
   const highestOverallScore = Math.max(...highestScores);
 
   // Get total scores of the in-the-money players
-  const firstPlaceTotal = sortedPlayers[0].total;
-  const fourthPlaceTotal = sortedPlayers[3].total;
+  const firstPlaceTotal = players[0].total;
+  const fourthPlaceTotal = players[3].total;
+
+  // Sort Players by Total Points
+  const [sortConfig, setSortConfig] = useState({
+    key: "total",
+    direction: "descending",
+  });
+
+  const sortedPlayers = [...players].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const handleSort = (key) => {
+    let direction = "descending";
+    if (sortConfig.key === key && sortConfig.direction === "descending") {
+      direction = "ascending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return null;
+    return sortConfig.direction === "ascending" ? (
+      <FiArrowUp className="ml-1 inline" />
+    ) : (
+      <FiArrowDown className="ml-1 inline" />
+    );
+  };
 
   return (
     <div className="flex justify-center">
@@ -50,28 +84,32 @@ const FDLeaderboard = ({ results, title }) => {
           <table className="min-w-full mb-6">
             <thead className="bg-green-700 text-white">
               <tr>
-                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider">
+                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r">
                   Rank
                 </th>
-                <th className="px-3 py-1 text-left text-xs font-medium uppercase tracking-wider">
+                <th className="px-3 py-1 text-left text-xs font-medium uppercase tracking-wider border-r">
                   Name
                 </th>
-                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider">
-                  Total
+                <th
+                  className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r cursor-pointer"
+                  onClick={() => handleSort("total")}
+                >
+                  Total {getSortIcon("total")}
                 </th>
-                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider">
+                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r">
                   Off 1st
                 </th>
-                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider">
+                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r">
                   Off 4th
                 </th>
                 {/* Render dynamic headers for weeks */}
                 {Array.from({ length: weeks }).map((_, i) => (
                   <th
                     key={i}
-                    className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider"
+                    className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r cursor-pointer"
+                    onClick={() => handleSort(`week ${i + 1}`)}
                   >
-                    {`Week ${i + 1}`}
+                    {`Week ${i + 1}`} {getSortIcon(`week ${i + 1}`)}
                   </th>
                 ))}
               </tr>
@@ -82,14 +120,14 @@ const FDLeaderboard = ({ results, title }) => {
                   key={index}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm font-medium text-gray-900 border-r">
                     {player.rank}
                   </td>
-                  <td className="px-3 py-1 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-3 py-1 whitespace-nowrap text-sm font-medium text-gray-900 border-r">
                     {player.name}
                   </td>
                   <td
-                    className={`px-3 py-1 text-center whitespace-nowrap text-sm font-bold text-gray-900 ${
+                    className={`px-3 py-1 text-center whitespace-nowrap text-sm font-bold text-gray-900 border-r ${
                       player.rank <= 4 ? "bg-green-200" : ""
                     }`}
                   >
@@ -107,12 +145,12 @@ const FDLeaderboard = ({ results, title }) => {
                     )}
                     {player.total}
                   </td>
-                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm text-gray-500 border-r">
                     {player.total - firstPlaceTotal >= 0
                       ? "-"
                       : (player.total - firstPlaceTotal).toFixed(2)}
                   </td>
-                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm text-gray-500 border-r">
                     {player.total - fourthPlaceTotal >= 0
                       ? "-"
                       : (player.total - fourthPlaceTotal).toFixed(2)}
@@ -129,7 +167,7 @@ const FDLeaderboard = ({ results, title }) => {
                     return (
                       <td
                         key={weekIndex}
-                        className={`px-3 py-1 text-center whitespace-nowrap text-sm ${
+                        className={`px-3 py-1 text-center whitespace-nowrap text-sm border-r ${
                           isHighest || isOverallHigh
                             ? "bg-green-200 font-bold"
                             : "text-gray-500"
