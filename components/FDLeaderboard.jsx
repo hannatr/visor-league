@@ -84,10 +84,10 @@ const FDLeaderboard = ({ results, title }) => {
           <table className="min-w-full mb-6">
             <thead className="bg-green-700 text-white">
               <tr>
-                <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r">
+                <th className="sticky left-0 px-3 py-1 text-center text-xs font-medium uppercase tracking-wider bg-green-700">
                   Rank
                 </th>
-                <th className="px-3 py-1 text-left text-xs font-medium uppercase tracking-wider border-r">
+                <th className="sticky left-[3rem] px-3 py-1 text-left text-xs font-medium uppercase tracking-wider bg-green-700">
                   Name
                 </th>
                 <th
@@ -120,10 +120,10 @@ const FDLeaderboard = ({ results, title }) => {
                   key={index}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-3 py-1 text-center whitespace-nowrap text-sm font-medium text-gray-900 border-r">
+                  <td className="sticky left-0 px-3 py-1 text-center whitespace-nowrap text-sm font-medium text-gray-900 bg-white">
                     {player.rank}
                   </td>
-                  <td className="px-3 py-1 whitespace-nowrap text-sm font-medium text-gray-900 border-r">
+                  <td className="sticky left-[3rem] px-3 py-1 whitespace-nowrap text-sm font-medium text-gray-900 bg-white">
                     {player.name}
                   </td>
                   <td
