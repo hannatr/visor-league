@@ -50,10 +50,19 @@ const FDLeaderboard = ({ results, title }) => {
   });
 
   const sortedPlayers = [...players].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
+    const aValue =
+      typeof a[sortConfig.key] === "number"
+        ? a[sortConfig.key]
+        : parseFloat(a[sortConfig.key]);
+    const bValue =
+      typeof b[sortConfig.key] === "number"
+        ? b[sortConfig.key]
+        : parseFloat(b[sortConfig.key]);
+
+    if (aValue < bValue) {
       return sortConfig.direction === "ascending" ? -1 : 1;
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
+    if (aValue > bValue) {
       return sortConfig.direction === "ascending" ? 1 : -1;
     }
     return 0;

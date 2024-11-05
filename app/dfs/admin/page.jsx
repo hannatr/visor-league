@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function DFSAdminPage() {
-  const isAuthenticated = cookies().get("admin-auth")?.value === "true";
+  const cookieStore = await cookies();
+  const isAuthenticated = cookieStore.get("admin-auth")?.value === "true";
 
   if (!isAuthenticated) {
     redirect("/login");

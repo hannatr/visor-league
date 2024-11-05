@@ -177,7 +177,8 @@ async function adminLogin({ username, password }) {
     console.log(`Successful login by ${username}`);
 
     // If login is successful, set a cookie
-    cookies().set("admin-auth", "true", {
+    const cookieStore = await cookies();
+    cookieStore.set("admin-auth", "true", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 3600, // 1 hour
