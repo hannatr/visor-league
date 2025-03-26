@@ -94,7 +94,7 @@ const DFSAdminForm = ({ results }) => {
             Week
           </label>
           <select
-            className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-hidden focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
             value={week}
             onChange={(e) => setWeek(e.target.value)}
           >
@@ -111,7 +111,7 @@ const DFSAdminForm = ({ results }) => {
             Scores
           </label>
           <textarea
-            className="mt-1 block w-full h-48 p-3 border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full h-48 p-3 border border-gray-300 focus:outline-hidden focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
             value={scores}
             onChange={(e) => setScores(e.target.value)}
             placeholder="Paste scores here in the format: user1 102.3"
@@ -122,7 +122,7 @@ const DFSAdminForm = ({ results }) => {
 
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="w-full bg-green-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-green-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           Submit
         </button>

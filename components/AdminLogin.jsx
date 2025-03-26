@@ -36,7 +36,7 @@ const AdminLogin = () => {
               Username:
             </label>
             <input
-              className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-hidden focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -47,7 +47,7 @@ const AdminLogin = () => {
               Password:
             </label>
             <input
-              className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-hidden focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

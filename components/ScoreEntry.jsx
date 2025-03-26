@@ -45,7 +45,7 @@ const ScoreEntry = ({ show, onClose, hole, score, onSave }) => {
                   type="number"
                   value={holeScore}
                   onChange={(e) => setHoleScore(e.target.value)}
-                  className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-hidden focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
                 />
               </div>
             </div>
@@ -53,14 +53,14 @@ const ScoreEntry = ({ show, onClose, hole, score, onSave }) => {
           <div className="mt-5 sm:mt-6">
             <button
               type="button"
-              className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
+              className="inline-flex justify-center w-full rounded-md border border-transparent shadow-xs px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
               onClick={handleSave}
             >
               Save
             </button>
             <button
               type="button"
-              className="mt-3 inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm"
+              className="mt-3 inline-flex justify-center w-full rounded-md border border-transparent shadow-xs px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm"
               onClick={onClose}
             >
               Cancel
