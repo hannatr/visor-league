@@ -43,8 +43,9 @@ const RulesPage = () => {
               <p className="mt-1 text-md">Dues: $125</p>
               <p className="mt-1 text-md">Payouts:</p>
               <ul className="mt-1 list-disc pl-5">
-                <li className="mb-1">Season Long 1st Place: $400</li>
-                <li className="mb-1">Season Long 2nd Place: $100</li>
+                <li className="mb-1">Season Long 1st Place: $500</li>
+                <li className="mb-1">Season Long 2nd Place: $300</li>
+                <li className="mb-1">Season Long 3rd Place: $125</li>
                 <li className="mb-1">Individual Event Win: $50</li>
               </ul>
             </div>

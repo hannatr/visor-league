@@ -49,9 +49,7 @@ async function fetchPlayers(leagueOnly = false) {
     let players = await Player.find({}).lean();
 
     if (leagueOnly) {
-      players = players.filter(
-        (player) => player.player_id >= 1 && player.player_id <= 10
-      );
+      players = players.filter((player) => player.in_league);
     }
 
     return convertIdToString(players);

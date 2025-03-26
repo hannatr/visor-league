@@ -8,7 +8,12 @@ export const dynamic = "force-dynamic";
 export default async function SeasonHistoryPage({ params }) {
   const { season } = params;
   const results = await fetchResults({ season: `${season}` });
-  const players = await fetchPlayers(true);
+  const allPlayers = await fetchPlayers(true);
+
+  // Filter players based on start_year
+  const players = allPlayers.filter(
+    (player) => !player.start_year || player.start_year <= parseInt(season)
+  );
 
   return (
     <div className="bg-gray-100 min-h-screen">
