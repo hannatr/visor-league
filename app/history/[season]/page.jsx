@@ -6,7 +6,7 @@ import EventResults from "@/components/EventResults";
 export const dynamic = "force-dynamic";
 
 export default async function SeasonHistoryPage({ params }) {
-  const { season } = params;
+  const { season } = await params;
   const results = await fetchResults({ season: `${season}` });
   const allPlayers = await fetchPlayers(true);
 

@@ -9,11 +9,17 @@ const Leaderboard = ({ players, results, title }) => {
     return [...acc, ...result.events]; // Flatten event lists
   }, []);
 
-  // Function to count positions
-  const countPositions = (playerId, points) => {
+  // Function to count positions (first, second, third)
+  const countPositions = (playerId, placement) => {
     return events.reduce((count, event) => {
       const result = event.results.find((result) => result.player === playerId);
-      if (result && result.points === points) {
+      // First place points in the number of players in the event
+      let targetPoints = event.results.length;
+      if (placement === "second") targetPoints -= 1;
+      if (placement === "third") targetPoints -= 2;
+      if (placement === "last") targetPoints = 1;
+
+      if (result && result.points === targetPoints) {
         return count + 1;
       }
       return count;
@@ -23,21 +29,14 @@ const Leaderboard = ({ players, results, title }) => {
   // Aggregate Points and Positions
   const playerStats = players.map((player) => {
     const totalPoints = events.reduce((acc, event) => {
-      const result = event.results.find(
-        (result) => result.player === player.player_id
-      );
+      const result = event.results.find((r) => r.player === player.player_id);
       return acc + (result ? result.points : 0);
     }, 0);
 
-    const firsts = countPositions(player.player_id, 10);
-    const seconds = countPositions(player.player_id, 9);
-    const thirds = countPositions(player.player_id, 8);
-    const lasts = events.reduce((count, event) => {
-      const lastPlaces = event.results
-        .filter((r) => r.points === 1)
-        .map((r) => r.player);
-      return lastPlaces.includes(player.player_id) ? count + 1 : count;
-    }, 0);
+    const firsts = countPositions(player.player_id, "first");
+    const seconds = countPositions(player.player_id, "second");
+    const thirds = countPositions(player.player_id, "third");
+    const lasts = countPositions(player.player_id, "last");
 
     return { ...player, points: totalPoints, firsts, seconds, thirds, lasts };
   });
