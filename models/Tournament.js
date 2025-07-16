@@ -26,6 +26,8 @@ const TournamentSchema = new Schema({
   date: { type: String, required: true },
   current: { type: Boolean, required: true },
   course: { type: String, required: true },
+  time: { type: String, required: true },
+  winner: { type: String, required: false },
   holes: [HoleSchema],
   scorecards: [ScorecardSchema],
 });

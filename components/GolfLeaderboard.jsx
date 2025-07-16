@@ -43,7 +43,9 @@ const GolfLeaderboard = ({ tournament, players }) => {
           {tournament.title}
         </h2>
         <p className="text-sm text-center text-gray-600">{tournament.date}</p>
-        <p className="text-sm text-center text-gray-600">{tournament.course}</p>
+        <p className="text-sm text-center text-gray-600">
+          {tournament.course}{` - ${tournament.time}`}
+        </p>
         <div className="overflow-x-auto md:overflow-hidden">
           <table className="min-w-full mb-6 mt-4">
             <thead className="bg-green-700 text-white">
