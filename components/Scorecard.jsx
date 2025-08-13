@@ -68,9 +68,11 @@ const Scorecard = ({ scorecard, players, holes }) => {
     <div className="bg-white border border-green-700 rounded-lg shadow-md p-4 mb-4">
       <div className="flex items-baseline space-x-2 mb-2">
         <h3 className="text-lg font-bold">{scorecard.team}</h3>
-        <p className="text-xs font-medium text-gray-500">
-          Tee Time: {scorecard.tee_time}
-        </p>
+        {scorecard.tee_time && (
+          <p className="text-xs font-medium text-gray-500">
+            Tee Time: {scorecard.tee_time}
+          </p>
+        )}
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full mb-2">

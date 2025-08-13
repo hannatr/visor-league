@@ -48,7 +48,7 @@ export default async function GolfPage() {
           <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md">
             <div className="p-4">
               <h2 className="text-xl font-bold">Past Champions</h2>
-              <p className="text-sm justify-left text-gray-600 italic mb-2">
+              <p className="text-sm text-left text-gray-600 italic mb-2">
                 The Visor Classic is a long-running, historic tournament among
                 mediocre golfers. In its founding year in 2020, tournament
                 organizer Christopher Ball had the bright vision of a golf
