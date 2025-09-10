@@ -14,8 +14,8 @@ export default async function DFSAdminPage() {
     redirect("/login");
   }
 
-  // Fetch the results after successful authentication
-  const results = await fetchDFSResults();
+  // Fetch only the current league results after successful authentication
+  const results = await fetchDFSResults({ query: { current: true } });
 
   return (
     <div className="bg-gray-100 min-h-screen">

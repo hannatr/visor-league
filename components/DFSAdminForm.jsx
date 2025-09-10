@@ -7,7 +7,8 @@ const DFSAdminForm = ({ results }) => {
   const [scores, setScores] = useState("");
   const [error, setError] = useState(null);
 
-  const league = results[0];
+  // Ensure we're working with the current league
+  const league = results.find(r => r.current === true) || results[0];
 
   const preprocessScores = (rawScores) => {
     const lines = rawScores.trim().split("\n");
