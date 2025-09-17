@@ -32,6 +32,11 @@ const FDLeaderboard = ({ results, title }) => {
       ...players.map((player) => player[`week ${weekIndex + 1}`])
     );
   });
+  const secondScores = Array.from({ length: weeks }).map((_, weekIndex) => {
+    const weekScores = players.map((player) => player[`week ${weekIndex + 1}`]);
+    const sortedScores = [...weekScores].sort((a, b) => b - a);
+    return sortedScores.length > 1 ? sortedScores[1] : null; // Second highest score
+  });
   const lowestScores = Array.from({ length: weeks }).map((_, weekIndex) => {
     return Math.min(
       ...players.map((player) => player[`week ${weekIndex + 1}`])
@@ -41,7 +46,7 @@ const FDLeaderboard = ({ results, title }) => {
 
   // Get total scores of the in-the-money players
   const firstPlaceTotal = players[0].total;
-  const fourthPlaceTotal = players[3].total;
+  const lastPlaceTotal = players[league.season_places - 1]?.total || players[3].total;
 
   // Sort Players by Total Points
   const [sortConfig, setSortConfig] = useState({
@@ -109,7 +114,7 @@ const FDLeaderboard = ({ results, title }) => {
                   Off 1st
                 </th>
                 <th className="px-3 py-1 text-center text-xs font-medium uppercase tracking-wider border-r">
-                  Off 4th
+                  Off {league.season_places}th
                 </th>
                 {/* Render dynamic headers for weeks */}
                 {Array.from({ length: weeks }).map((_, i) => (
@@ -137,7 +142,7 @@ const FDLeaderboard = ({ results, title }) => {
                   </td>
                   <td
                     className={`px-3 py-1 text-center whitespace-nowrap text-sm font-bold text-gray-900 border-r ${
-                      player.rank <= 4 ? "bg-green-200" : ""
+                      player.rank <= league.season_places ? "bg-green-200" : ""
                     }`}
                   >
                     {player.rank === 1 && (
@@ -149,7 +154,7 @@ const FDLeaderboard = ({ results, title }) => {
                     {player.rank === 3 && (
                       <FaMedal className="text-yellow-700 inline mr-1" />
                     )}
-                    {player.rank === 4 && (
+                    {player.rank >= 4 && player.rank <= league.season_places && (
                       <FaMedal className="text-red-500 inline mr-1" />
                     )}
                     {player.total}
@@ -160,15 +165,20 @@ const FDLeaderboard = ({ results, title }) => {
                       : (player.total - firstPlaceTotal).toFixed(2)}
                   </td>
                   <td className="px-3 py-1 text-center whitespace-nowrap text-sm text-gray-500 border-r">
-                    {player.total - fourthPlaceTotal >= 0
+                    {player.total - lastPlaceTotal >= 0
                       ? "-"
-                      : (player.total - fourthPlaceTotal).toFixed(2)}
+                      : (player.total - lastPlaceTotal).toFixed(2)}
                   </td>
-                  {/* Render each week's score with highest score highlighted */}
+                  {/* Render each week's score with top scores highlighted */}
                   {Array.from({ length: weeks }).map((_, weekIndex) => {
                     const score = player[`week ${weekIndex + 1}`];
                     const isHighest =
                       score === highestScores[weekIndex] &&
+                      score != highestOverallScore;
+                    const isSecond =
+                      (league.weekly_places || 2) >= 2 &&
+                      secondScores[weekIndex] !== null &&
+                      score === secondScores[weekIndex] &&
                       score != highestOverallScore;
                     const isLowest = score === lowestScores[weekIndex];
                     const isOverallHigh = score === highestOverallScore;
@@ -177,7 +187,7 @@ const FDLeaderboard = ({ results, title }) => {
                       <td
                         key={weekIndex}
                         className={`px-3 py-1 text-center whitespace-nowrap text-sm border-r ${
-                          isHighest || isOverallHigh
+                          isHighest || isSecond || isOverallHigh
                             ? "bg-green-200 font-bold"
                             : "text-gray-500"
                         }`}
@@ -187,6 +197,9 @@ const FDLeaderboard = ({ results, title }) => {
                         )}
                         {isHighest && (
                           <FaTrophy className="inline-block mr-1 text-yellow-500" />
+                        )}
+                        {isSecond && (
+                          <FaTrophy className="inline-block mr-1 text-gray-400" />
                         )}
                         {isLowest && (
                           <FaThumbsDown className="inline-block mr-1 text-red-500" />

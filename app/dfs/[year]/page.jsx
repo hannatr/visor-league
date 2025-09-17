@@ -5,6 +5,14 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }) {
+  const { year } = params;
+  return {
+    title: `${year} DFS League - Visor League`,
+    description: `${year} DFS League standings and historical results`
+  };
+}
+
 export default async function DFSYearPage({ params }) {
   const { year } = params;
   const results = await fetchDFSResults({ query: { season: parseInt(year) } });

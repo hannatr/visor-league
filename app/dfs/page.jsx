@@ -4,6 +4,10 @@ import { fetchDFSResults } from "@/utils/requests";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "DFS League - Visor League",
+  description: "Current DFS League standings and results"
+};
 
 export default async function DFSPage() {
   const results = await fetchDFSResults({ query: { current: true } });
@@ -23,7 +27,7 @@ export default async function DFSPage() {
       </div>
 
       <div className="flex justify-center">
-          <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md">
+          <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md mb-6">
             <div className="p-4">
               <h2 className="text-xl font-bold">Past League Results</h2>
               <p className="text-sm text-left text-gray-600 italic mb-2">

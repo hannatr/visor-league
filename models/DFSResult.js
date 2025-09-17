@@ -13,6 +13,8 @@ const DFSResultSchema = new Schema({
   season: { type: Number, required: true },
   current: { type: Boolean, required: true, default: false },
   weeks: { type: Number, required: true },
+  season_places: { type: Number, required: true },
+  weekly_places: { type: Number, required: true },
   players: [DFSPlayerSchema],
 });
 
