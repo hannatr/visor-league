@@ -32,11 +32,12 @@ const FDLeaderboard = ({ results, title }) => {
       ...players.map((player) => player[`week ${weekIndex + 1}`])
     );
   });
-  const secondScores = Array.from({ length: weeks }).map((_, weekIndex) => {
-    const weekScores = players.map((player) => player[`week ${weekIndex + 1}`]);
-    const sortedScores = [...weekScores].sort((a, b) => b - a);
-    return sortedScores.length > 1 ? sortedScores[1] : null; // Second highest score
-  });
+  // Calculate the second highest score across all weeks
+  const allScores = players.flatMap(player =>
+    Object.values(player).filter(value => typeof value === 'number' && value > 0)
+  );
+  const sortedAllScores = [...allScores].sort((a, b) => b - a);
+  const secondHighestScore = sortedAllScores.length > 1 ? sortedAllScores[1] : null;
   const lowestScores = Array.from({ length: weeks }).map((_, weekIndex) => {
     return Math.min(
       ...players.map((player) => player[`week ${weekIndex + 1}`])
@@ -175,10 +176,9 @@ const FDLeaderboard = ({ results, title }) => {
                     const isHighest =
                       score === highestScores[weekIndex] &&
                       score != highestOverallScore;
-                    const isSecond =
-                      (league.weekly_places || 2) >= 2 &&
-                      secondScores[weekIndex] !== null &&
-                      score === secondScores[weekIndex] &&
+                    const isOverallSecond =
+                      secondHighestScore !== null &&
+                      score === secondHighestScore &&
                       score != highestOverallScore;
                     const isLowest = score === lowestScores[weekIndex];
                     const isOverallHigh = score === highestOverallScore;
@@ -187,8 +187,10 @@ const FDLeaderboard = ({ results, title }) => {
                       <td
                         key={weekIndex}
                         className={`px-3 py-1 text-center whitespace-nowrap text-sm border-r ${
-                          isHighest || isSecond || isOverallHigh
+                          isHighest
                             ? "bg-green-200 font-bold"
+                            : isOverallHigh || isOverallSecond
+                            ? "bg-blue-200 font-bold"
                             : "text-gray-500"
                         }`}
                       >
@@ -198,8 +200,8 @@ const FDLeaderboard = ({ results, title }) => {
                         {isHighest && (
                           <FaTrophy className="inline-block mr-1 text-yellow-500" />
                         )}
-                        {isSecond && (
-                          <FaTrophy className="inline-block mr-1 text-gray-400" />
+                        {isOverallSecond && (
+                          <FaGem className="inline-block mr-1 text-gray-500" />
                         )}
                         {isLowest && (
                           <FaThumbsDown className="inline-block mr-1 text-red-500" />
