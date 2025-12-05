@@ -6,7 +6,7 @@ import Scorecard from "@/components/Scorecard";
 export const dynamic = "force-dynamic";
 
 export default async function TournamentYearPage({ params }) {
-  const { year } = params;
+  const { year } = await params;
   const players = await fetchPlayers();
   const tournaments = await fetchTournaments({ season: year });
   

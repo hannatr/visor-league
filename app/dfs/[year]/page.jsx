@@ -6,7 +6,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
-  const { year } = params;
+  const { year } = await params;
   return {
     title: `${year} DFS League - Visor League`,
     description: `${year} DFS League standings and historical results`
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function DFSYearPage({ params }) {
-  const { year } = params;
+  const { year } = await params;
   const results = await fetchDFSResults({ query: { season: parseInt(year) } });
   
   // Find the DFS result for this specific year

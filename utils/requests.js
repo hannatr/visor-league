@@ -68,7 +68,7 @@ async function fetchTournaments({ current = false, season = "" } = {}) {
       query.current = true;
     }
     if (season) {
-      query.season = season;
+      query.year = parseInt(season);
     }
 
     const tournaments = await Tournament.find(query).lean();
