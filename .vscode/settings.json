@@ -9,6 +9,7 @@
     "editor.formatOnSave": true
   },
   "[json]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "j-brooke.fracturedjsonvsc"
   }
 }

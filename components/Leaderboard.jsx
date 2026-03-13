@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaTrophy, FaMedal, FaThumbsDown } from "react-icons/fa";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 
-const Leaderboard = ({ players, results, title }) => {
+const Leaderboard = ({ players, results, title, showFirstSeason = false }) => {
   // Aggregate all events into a single list
   const events = results.reduce((acc, result) => {
     return [...acc, ...result.events]; // Flatten event lists
@@ -38,7 +38,15 @@ const Leaderboard = ({ players, results, title }) => {
     const thirds = countPositions(player.player_id, "third");
     const lasts = countPositions(player.player_id, "last");
 
-    return { ...player, points: totalPoints, firsts, seconds, thirds, lasts };
+    return {
+      ...player,
+      points: totalPoints,
+      firsts,
+      seconds,
+      thirds,
+      lasts,
+      firstSeason: player.start_year ?? 2023,
+    };
   });
 
   // Sort Players by Points
@@ -48,10 +56,12 @@ const Leaderboard = ({ players, results, title }) => {
   });
 
   const sortedPlayers = [...playerStats].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
+    const aVal = sortConfig.key === "firstSeason" ? (a.start_year ?? 2023) : a[sortConfig.key];
+    const bVal = sortConfig.key === "firstSeason" ? (b.start_year ?? 2023) : b[sortConfig.key];
+    if (aVal < bVal) {
       return sortConfig.direction === "ascending" ? -1 : 1;
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
+    if (aVal > bVal) {
       return sortConfig.direction === "ascending" ? 1 : -1;
     }
     return 0;
@@ -85,6 +95,14 @@ const Leaderboard = ({ players, results, title }) => {
                 <th className="px-6 py-1 text-left text-xs font-medium uppercase tracking-wider">
                   Name
                 </th>
+                {showFirstSeason && (
+                  <th
+                    className="px-6 py-1 text-center text-xs font-medium uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort("firstSeason")}
+                  >
+                    First Season {getSortIcon("firstSeason")}
+                  </th>
+                )}
                 <th
                   className="px-6 py-1 text-center text-xs font-medium uppercase tracking-wider cursor-pointer"
                   onClick={() => handleSort("points")}
@@ -138,6 +156,11 @@ const Leaderboard = ({ players, results, title }) => {
                   <td className="px-6 py-1 whitespace-nowrap text-sm font-medium text-gray-900">
                     {player.name}
                   </td>
+                  {showFirstSeason && (
+                    <td className="px-6 py-1 text-center whitespace-nowrap text-sm text-gray-500">
+                      {player.firstSeason}
+                    </td>
+                  )}
                   <td className="px-6 py-1 text-center whitespace-nowrap text-sm text-gray-500">
                     {player.points}
                   </td>

@@ -9,13 +9,12 @@ const RulesPage = () => {
             <div className="p-4">
               <h2 className="text-xl font-bold">Rules</h2>
               <p className="text-sm text-gray-600 italic">
-                Last Updated: April 24, 2024
+                Last Updated: March 13, 2026
               </p>
               <p className="mt-2 text-md">
-                There will be 14 events throughout the season. Each event will
-                have a clear scoring system. Points are awarded 10 through 1 for
-                places 1 through 10. The last event will likely revolve around
-                the Super Bowl. There will be no playoffs. Everyone will be
+                There will be 16 events throughout the season. Each event will
+                have a clear scoring system. Points are awarded 14 through 1 for
+                places 1 through 14. There will be no playoffs. Everyone will be
                 eligible for the season long prizes throughout the entire
                 season.
               </p>
@@ -40,13 +39,13 @@ const RulesPage = () => {
           <div className="w-full max-w-4xl overflow-hidden bg-white border border-green-700 rounded-lg shadow-md">
             <div className="p-4">
               <h2 className="text-xl font-bold">Dues and Payouts</h2>
-              <p className="mt-1 text-md">Dues: $125</p>
+              <p className="mt-1 text-md">Dues: $150</p>
               <p className="mt-1 text-md">Payouts:</p>
               <ul className="mt-1 list-disc pl-5">
-                <li className="mb-1">Season Long 1st Place: $500</li>
-                <li className="mb-1">Season Long 2nd Place: $300</li>
-                <li className="mb-1">Season Long 3rd Place: $125</li>
-                <li className="mb-1">Individual Event Win: $50</li>
+                <li className="mb-1">Season Long 1st Place: $560</li>
+                <li className="mb-1">Season Long 2nd Place: $330</li>
+                <li className="mb-1">Season Long 3rd Place: $150</li>
+                <li className="mb-1">Individual Event Win: $60</li>
               </ul>
             </div>
           </div>
