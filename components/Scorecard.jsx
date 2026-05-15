@@ -160,6 +160,11 @@ const Scorecard = ({ scorecard, players, holes }) => {
         </table>
       </div>
       <ScoreEntry
+        key={
+          selectedHole && showModal
+            ? `${selectedHole.holeNumber}-${selectedScore}`
+            : "closed"
+        }
         show={showModal}
         hole={selectedHole}
         score={selectedScore}

@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const ScoreEntry = ({ show, onClose, hole, score, onSave }) => {
   const [holeScore, setHoleScore] = useState(score);
-
-  useEffect(() => {
-    setHoleScore(score);
-  }, [score]);
 
   const handleSave = () => {
     onSave(holeScore);

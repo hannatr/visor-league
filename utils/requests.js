@@ -2,6 +2,7 @@
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import connectDB from "@/config/database";
+import { isAdminAuthenticated } from "@/utils/auth";
 import Result from "@/models/Result";
 import Player from "@/models/Player";
 import Tournament from "@/models/Tournament";
@@ -132,6 +133,10 @@ async function updateScore({ token, scorecard_id, holeNumber, score }) {
 
 async function updateDFSLeague({ league }) {
   try {
+    if (!(await isAdminAuthenticated())) {
+      return { status: 401, error: "Unauthorized" };
+    }
+
     await connectDB();
 
     // Find the league document in the database by _id (or another unique field)
