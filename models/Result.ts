@@ -1,35 +1,10 @@
-import {
-  Schema,
-  model,
-  models,
-  type InferSchemaType,
-  type Model,
-} from "mongoose";
+import type { Collection, ObjectId } from "mongodb";
+import { getDb } from "@/config/database";
+import type { SeasonResult } from "@/types/domain";
 
-const EventResultSchema = new Schema({
-  player: { type: Number, required: true },
-  raw: { type: Number, required: true },
-  points: { type: Number, required: true },
-});
+export type ResultDoc = Omit<SeasonResult, "_id"> & { _id: ObjectId };
 
-const EventSchema = new Schema({
-  id: { type: Number, required: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  date: { type: String, required: true },
-  results: [EventResultSchema],
-});
-
-const ResultSchema = new Schema({
-  season: { type: Number, required: true },
-  current: { type: Boolean, required: true, default: false },
-  events: [EventSchema],
-});
-
-export type ResultDoc = InferSchemaType<typeof ResultSchema>;
-
-const Result: Model<ResultDoc> =
-  (models.Result as Model<ResultDoc>) ||
-  model<ResultDoc>("Result", ResultSchema);
-
-export default Result;
+export async function results(): Promise<Collection<ResultDoc>> {
+  const db = await getDb();
+  return db.collection<ResultDoc>("results");
+}

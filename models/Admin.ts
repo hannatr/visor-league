@@ -1,20 +1,13 @@
-import {
-  Schema,
-  model,
-  models,
-  type InferSchemaType,
-  type Model,
-} from "mongoose";
+import type { Collection, ObjectId } from "mongodb";
+import { getDb } from "@/config/database";
 
-const AdminSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
+export type AdminDoc = {
+  _id: ObjectId;
+  username: string;
+  password: string;
+};
 
-export type AdminDoc = InferSchemaType<typeof AdminSchema>;
-
-const Admin: Model<AdminDoc> =
-  (models.Admin as Model<AdminDoc>) ||
-  model<AdminDoc>("Admin", AdminSchema, "admin");
-
-export default Admin;
+export async function admins(): Promise<Collection<AdminDoc>> {
+  const db = await getDb();
+  return db.collection<AdminDoc>("admin");
+}

@@ -22,9 +22,7 @@ export default async function DFSYearPage({
   params: Promise<{ year: string }>;
 }) {
   const { year } = await params;
-  const results = await fetchDFSResults({
-    query: { season: parseInt(year, 10) },
-  });
+  const results = await fetchDFSResults({ season: year });
 
   const league = results.find((r) => r.season === parseInt(year, 10)) || null;
 

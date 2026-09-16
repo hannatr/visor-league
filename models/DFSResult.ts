@@ -1,32 +1,10 @@
-import {
-  Schema,
-  model,
-  models,
-  type InferSchemaType,
-  type Model,
-} from "mongoose";
+import type { Collection, ObjectId } from "mongodb";
+import { getDb } from "@/config/database";
+import type { DFSLeague } from "@/types/domain";
 
-const DFSPlayerSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    scores: [Number],
-  },
-  { _id: false },
-);
+export type DFSResultDoc = Omit<DFSLeague, "_id"> & { _id: ObjectId };
 
-const DFSResultSchema = new Schema({
-  season: { type: Number, required: true },
-  current: { type: Boolean, required: true, default: false },
-  weeks: { type: Number, required: true },
-  season_places: { type: Number, required: true },
-  weekly_places: { type: Number, required: true },
-  players: [DFSPlayerSchema],
-});
-
-export type DFSResultDoc = InferSchemaType<typeof DFSResultSchema>;
-
-const DFSResult: Model<DFSResultDoc> =
-  (models.DFSResult as Model<DFSResultDoc>) ||
-  model<DFSResultDoc>("DFSResult", DFSResultSchema, "dfs-results");
-
-export default DFSResult;
+export async function dfsResults(): Promise<Collection<DFSResultDoc>> {
+  const db = await getDb();
+  return db.collection<DFSResultDoc>("dfs-results");
+}

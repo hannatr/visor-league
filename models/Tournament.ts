@@ -1,46 +1,10 @@
-import {
-  Schema,
-  model,
-  models,
-  type InferSchemaType,
-  type Model,
-} from "mongoose";
+import type { Collection, ObjectId } from "mongodb";
+import { getDb } from "@/config/database";
+import type { Tournament } from "@/types/domain";
 
-const HoleSchema = new Schema({
-  holeNumber: { type: Number, required: true },
-  par: { type: Number, required: true },
-  handicap: { type: Number, required: true },
-});
+export type TournamentDoc = Omit<Tournament, "_id"> & { _id: ObjectId };
 
-const ScoreSchema = new Schema({
-  holeNumber: { type: Number, required: true },
-  score: { type: Number, required: true, default: 0 },
-});
-
-const ScorecardSchema = new Schema({
-  scorecard_id: { type: Number, required: true },
-  team: { type: String, required: true },
-  tee_time: { type: String, required: false },
-  playerIds: [{ type: Number, required: true }],
-  scores: [ScoreSchema],
-});
-
-const TournamentSchema = new Schema({
-  year: { type: Number, required: true },
-  title: { type: String, required: true },
-  date: { type: String, required: true },
-  current: { type: Boolean, required: true },
-  course: { type: String, required: true },
-  time: { type: String, required: true },
-  winner: { type: String, required: false },
-  holes: [HoleSchema],
-  scorecards: [ScorecardSchema],
-});
-
-export type TournamentDoc = InferSchemaType<typeof TournamentSchema>;
-
-const Tournament: Model<TournamentDoc> =
-  (models.Tournament as Model<TournamentDoc>) ||
-  model<TournamentDoc>("Tournament", TournamentSchema);
-
-export default Tournament;
+export async function tournaments(): Promise<Collection<TournamentDoc>> {
+  const db = await getDb();
+  return db.collection<TournamentDoc>("tournaments");
+}

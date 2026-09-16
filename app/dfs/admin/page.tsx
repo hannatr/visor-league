@@ -10,7 +10,7 @@ export default async function DFSAdminPage() {
     redirect("/login");
   }
 
-  const results = await fetchDFSResults({ query: { current: true } });
+  const results = await fetchDFSResults({ current: true });
 
   return (
     <div className="min-h-screen bg-muted/40">

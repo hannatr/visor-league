@@ -2,14 +2,16 @@
 
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import type { QueryFilter } from "mongoose";
-import connectDB from "@/config/database";
+import { ObjectId, type Filter } from "mongodb";
 import { isAdminAuthenticated } from "@/utils/auth";
-import Result from "@/models/Result";
-import Player from "@/models/Player";
-import Tournament from "@/models/Tournament";
-import DFSResult from "@/models/DFSResult";
-import Admin from "@/models/Admin";
+import { admins } from "@/models/Admin";
+import { dfsResults } from "@/models/DFSResult";
+import { players } from "@/models/Player";
+import { results } from "@/models/Result";
+import { tournaments } from "@/models/Tournament";
+import type { DFSResultDoc } from "@/models/DFSResult";
+import type { ResultDoc } from "@/models/Result";
+import type { TournamentDoc } from "@/models/Tournament";
 import type {
   ActionStatusResponse,
   AdminLoginResult,
@@ -18,29 +20,9 @@ import type {
   SeasonResult,
   Tournament as TournamentDTO,
 } from "@/types/domain";
-import type { ResultDoc } from "@/models/Result";
-import type { TournamentDoc } from "@/models/Tournament";
-import type { DFSResultDoc } from "@/models/DFSResult";
 
-type MongoId = { _id?: { toString(): string } | string };
-
-function convertIdToString<T>(obj: T): T {
-  if (Array.isArray(obj)) {
-    return obj.map((item) => convertIdToString(item)) as T;
-  }
-  if (obj !== null && typeof obj === "object") {
-    const record = obj as Record<string, unknown>;
-    if (Object.prototype.hasOwnProperty.call(record, "_id")) {
-      const id = record._id as MongoId["_id"];
-      if (id != null && typeof id === "object" && "toString" in id) {
-        record._id = id.toString();
-      }
-    }
-    for (const key of Object.keys(record)) {
-      record[key] = convertIdToString(record[key]);
-    }
-  }
-  return obj;
+function toPlain<T>(doc: unknown): T {
+  return JSON.parse(JSON.stringify(doc)) as T;
 }
 
 export async function fetchResults({
@@ -51,19 +33,12 @@ export async function fetchResults({
   season?: string;
 } = {}): Promise<SeasonResult[]> {
   try {
-    await connectDB();
-
-    const query: QueryFilter<ResultDoc> = {};
+    const query: Filter<ResultDoc> = {};
     if (current) query.current = true;
     if (season) query.season = Number(season);
 
-    const results = await Result.find(query).lean();
-
-    if (!results || results.length === 0) {
-      return [];
-    }
-
-    return convertIdToString(results) as unknown as SeasonResult[];
+    const docs = await (await results()).find(query).toArray();
+    return docs.map((doc) => toPlain<SeasonResult>(doc));
   } catch (error) {
     console.log(error);
     return [];
@@ -72,17 +47,9 @@ export async function fetchResults({
 
 export async function fetchPlayers(leagueOnly = false): Promise<PlayerDTO[]> {
   try {
-    await connectDB();
-
-    const players = await Player.find({}).lean();
-
-    if (leagueOnly) {
-      return convertIdToString(
-        players.filter((player) => player.in_league),
-      ) as unknown as PlayerDTO[];
-    }
-
-    return convertIdToString(players) as unknown as PlayerDTO[];
+    const query = leagueOnly ? { in_league: true } : {};
+    const docs = await (await players()).find(query).toArray();
+    return docs.map((doc) => toPlain<PlayerDTO>(doc));
   } catch (error) {
     console.log(error);
     return [];
@@ -97,9 +64,7 @@ export async function fetchTournaments({
   season?: string;
 } = {}): Promise<TournamentDTO[]> {
   try {
-    await connectDB();
-
-    const query: QueryFilter<TournamentDoc> = {};
+    const query: Filter<TournamentDoc> = {};
     if (current) {
       query.current = true;
     }
@@ -107,9 +72,8 @@ export async function fetchTournaments({
       query.year = parseInt(season, 10);
     }
 
-    const tournaments = await Tournament.find(query).lean();
-
-    return convertIdToString(tournaments) as unknown as TournamentDTO[];
+    const docs = await (await tournaments()).find(query).toArray();
+    return docs.map((doc) => toPlain<TournamentDTO>(doc));
   } catch (error) {
     console.log(error);
     return [];
@@ -117,15 +81,19 @@ export async function fetchTournaments({
 }
 
 export async function fetchDFSResults({
-  query = {},
+  current = false,
+  season = "",
 }: {
-  query?: QueryFilter<DFSResultDoc>;
+  current?: boolean;
+  season?: string | number;
 } = {}): Promise<DFSLeague[]> {
   try {
-    await connectDB();
-    const results = await DFSResult.find(query).lean();
+    const query: Filter<DFSResultDoc> = {};
+    if (current) query.current = true;
+    if (season !== "" && season != null) query.season = Number(season);
 
-    return convertIdToString(results) as unknown as DFSLeague[];
+    const docs = await (await dfsResults()).find(query).toArray();
+    return docs.map((doc) => toPlain<DFSLeague>(doc));
   } catch (error) {
     console.log(error);
     return [];
@@ -148,9 +116,8 @@ export async function updateScore({
       return { status: 403, error: "Forbidden" };
     }
 
-    await connectDB();
-
-    const tournament = await Tournament.findOne({ current: true });
+    const collection = await tournaments();
+    const tournament = await collection.findOne({ current: true });
     if (!tournament) {
       return { status: 404, error: "Tournament not found" };
     }
@@ -172,7 +139,7 @@ export async function updateScore({
       scorecard.scores.push({ holeNumber, score });
     }
 
-    await tournament.save();
+    await collection.replaceOne({ _id: tournament._id }, tournament);
     return { status: 200, error: "Scorecard updated" };
   } catch (error) {
     console.log("Error updating score:", error);
@@ -190,22 +157,27 @@ export async function updateDFSLeague({
       return { status: 401, error: "Unauthorized" };
     }
 
-    await connectDB();
-
-    const existingLeague = await DFSResult.findById(league._id);
-    if (!existingLeague) {
+    if (!league._id || !ObjectId.isValid(league._id)) {
       return { status: 404, error: "League not found" };
     }
 
-    existingLeague.set(
-      "players",
-      league.players.map((player) => ({
-        name: player.name,
-        scores: player.scores,
-      })),
+    const result = await (
+      await dfsResults()
+    ).updateOne(
+      { _id: ObjectId.createFromHexString(league._id) },
+      {
+        $set: {
+          players: league.players.map((player) => ({
+            name: player.name,
+            scores: player.scores,
+          })),
+        },
+      },
     );
 
-    await existingLeague.save();
+    if (result.matchedCount === 0) {
+      return { status: 404, error: "League not found" };
+    }
 
     return { status: 200, message: "DFS League updated successfully" };
   } catch (error) {
@@ -222,9 +194,7 @@ export async function adminLogin({
   password: string;
 }): Promise<AdminLoginResult> {
   try {
-    await connectDB();
-
-    const admin = await Admin.findOne({ username }).lean();
+    const admin = await (await admins()).findOne({ username });
     if (!admin) {
       return { success: false, error: "Invalid username or password" };
     }

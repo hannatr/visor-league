@@ -16,7 +16,7 @@ export const metadata = {
 };
 
 export default async function DFSPage() {
-  const results = await fetchDFSResults({ query: { current: true } });
+  const results = await fetchDFSResults({ current: true });
   const allResults = await fetchDFSResults();
 
   const pastLeagues = allResults
