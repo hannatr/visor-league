@@ -1,0 +1,66 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+export default function RulesPage() {
+  return (
+    <div className="min-h-screen bg-muted/40">
+      <div className="mx-auto max-w-7xl px-2 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Card className="w-full max-w-4xl">
+            <CardHeader>
+              <CardTitle>Rules</CardTitle>
+              <CardDescription className="italic">
+                Last Updated: March 13, 2026
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                There will be 16 events throughout the season. Each event will
+                have a clear scoring system. Points are awarded 14 through 1 for
+                places 1 through 14. There will be no playoffs. Everyone will be
+                eligible for the season long prizes throughout the entire
+                season.
+              </p>
+              <p className="mt-2">Tiebreaker Rules:</p>
+              <ul className="mt-1 list-disc pl-5">
+                <li className="mb-1">
+                  Tie for places 1 to 3: Tie goes to whoever has more points in
+                  the current season long competition. If that is a tie, tie
+                  goes to whoever had more points in previous season.
+                </li>
+                <li className="mb-1">
+                  Tie for last place: Acts as a tie, all in tie get last place
+                  (and last place points).
+                </li>
+                <li className="mb-1">
+                  Tie for any other place: Acts as a tie, all in tie get higher
+                  place (and higher place points).
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          <Card className="w-full max-w-4xl">
+            <CardHeader>
+              <CardTitle>Dues and Payouts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Dues: $150</p>
+              <p className="mt-1">Payouts:</p>
+              <ul className="mt-1 list-disc pl-5">
+                <li className="mb-1">Season Long 1st Place: $560</li>
+                <li className="mb-1">Season Long 2nd Place: $330</li>
+                <li className="mb-1">Season Long 3rd Place: $150</li>
+                <li className="mb-1">Individual Event Win: $60</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
